@@ -93,7 +93,7 @@ def spawn_crobots_run(cmdLine, logtype):
 
 def build_crobots_cmdline(paramCmdLine, robotList, logtype):
     "build and run crobots command lines"
-    shuffle(robotList)
+    # shuffle(robotList) Not needed by CROBOTS patch level >= 3.4
     spawn_crobots_run(" ".join([paramCmdLine] + robotList), logtype)
 
 
