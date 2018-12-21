@@ -4,13 +4,14 @@
 """
 "CROBOTS" Crobots Merge DataBase support
 
-Version:        Python/1.1
+Version:        Python/1.2
 
                 Derived from CrobotsDB.py 1.0
 
 Author:         Maurizio Camangi
 
 Version History:
+                Version 1.2 Support for balanced scoring systems
                 Version 1.1 i 'move' action: merge + clean sources
                 Version 1.0 is the first stable version
 
@@ -39,6 +40,7 @@ def merge_db():
             values[1] += newvalues[1]
             values[2] += newvalues[2]
             values[3] += newvalues[3]
+            values[4] += newvalues[4]
             dbout[key] = values
         else:
             dbout[key] = newvalues
@@ -49,7 +51,7 @@ def merge_db():
             values[0] += newvalues[0]
             values[1] += newvalues[1]
             values[2] += newvalues[2]
-            values[3] += newvalues[3]
+            values[4] += newvalues[4]
             dbout[key] = values
     for key in dbin2:
         if STATUS_KEY == key:
@@ -63,6 +65,7 @@ def merge_db():
                 values[1] += newvalues[1]
                 values[2] += newvalues[2]
                 values[3] += newvalues[3]
+                values[4] += newvalues[4]
                 dbout[key] = values
             else:
                 dbout[key] = newvalues

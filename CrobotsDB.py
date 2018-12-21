@@ -4,13 +4,14 @@
 """
 "CROBOTS" Crobots Batch Tournament Manager with DataBase support
 
-Version:        Python/3.3
+Version:        Python/3.4
 
                 Derived from Crobots.py 1.3
 
 Author:         Maurizio Camangi
 
 Version History:
+                Version 3.4 Support for balanced scoring systems
                 Version 3.3 No need of log files anymore
                 Version 3.2 Return error code on SystemExit after Exception
                 Version 3.1 Save match list into dbase using a custom key
@@ -35,7 +36,7 @@ import time
 from itertools import combinations
 from random import shuffle
 
-from Count import parse_log_file
+from Count import parse_log_file, schema4
 from CrobotsLibs import available_cpu_count, check_stop_file_exist, clean_up_log_file, test_connection, \
     close_connection, \
     set_up, DATABASE_ENABLE, update_results, load_from_file, clean_up
@@ -105,7 +106,7 @@ def init_db(logfile, logtype):
         dbase = shelve.open(filename, 'c')
         for s in configuration.listRobots:
             key = os.path.basename(s)
-            dbase[key] = [0, 0, 0, 0]
+            dbase[key] = [0, 0, 0, 0, 0]
         dbase.sync()
     else:
         dbase = shelve.open(filename, 'w')
@@ -147,9 +148,11 @@ def update_db(lines, logtype):
         values[1] += r[2]
         values[2] += r[3]
         values[3] += r[4]
+        values[4] += r[5]
         dbase[name] = values
         if DATABASE_ENABLE:
-            update_results(logtype, name, values[0], values[1], values[2], values[3])
+            points = (values[1] * schema4[logtype][0])+(values[2] * schema4[logtype][1])+(values[3] * schema4[logtype][2])+(values[4] * schema4[logtype][3])
+            update_results(logtype, name, values[0], values[1], values[2]+values[3]+values[4], points)
     dbase.sync()
 
 

@@ -5,13 +5,15 @@
 "CROBOTS" Crobots Batch Bench Manager to test one single robot with DataBase
   support
 
-Version:        Python/1.5
+Version:        Python/1.7
 
                 Derived from CrobotsDB.py 1.1 and CrobotsBench.py 1.0
 
 Author:         Maurizio Camangi
 
 Version History:
+                Version 1.7 Support for balanced scoring systems
+                Version 1.6 Support for testing binary robot only (if no source code '.r' available, e.g. KOTH)
                 Version 1.5 No need of log files anymore
                 Version 1.4 Return error code on SystemExit after Exception
                 Version 1.3 Save match list into dbase using a custom key
@@ -96,10 +98,10 @@ def init_db(logfile, logtype):
     dbfile = dbfilename % (logfile, robotname, logtype)
     if not os.path.exists(dbfile):
         dbase = shelve.open(dbfile, 'c')
-        dbase[robotname] = [0, 0, 0, 0]
+        dbase[robotname] = [0, 0, 0, 0, 0]
         for s in configuration.listRobots:
             key = os.path.basename(s)
-            dbase[key] = [0, 0, 0, 0]
+            dbase[key] = [0, 0, 0, 0, 0]
         dbase.sync()
     else:
         dbase = shelve.open(dbfile, 'w')
@@ -116,6 +118,7 @@ def update_db(lines):
         values[1] += r[2]
         values[2] += r[3]
         values[3] += r[4]
+        values[4] += r[5]
         dbase[name] = values
     dbase.sync()
 
@@ -208,19 +211,21 @@ if action == 'clean':
 if not os.path.exists(robotTest):
     raise SystemExit('Robot %s does not exist' % robotTest)
 else:
-    print 'Compiling %s ...' % robotTest,
-    clean_up_log_file(robotTest + 'o')
-    with open(os.devnull, 'w') as devnull:
-        try:
-            p = subprocess.Popen(shlex.split("crobots -c %s" % robotTest), stdout=devnull, stderr=devnull, close_fds=True)
-            p.communicate()
-        except Exception, e:
-            raise SystemExit('Error on compiling Robot %s: %s' % (robotTest, e))
-    if not os.path.exists(robotTest + 'o'):
-        raise SystemExit('Robot %s does not compile' % robotTest)
+    if robotTest.endswith('.r'):
+        print 'Compiling %s ...' % robotTest,
+        clean_up_log_file(robotTest + 'o')
+        with open(os.devnull, 'w') as devnull:
+            try:
+                p = subprocess.Popen(shlex.split("crobots -c %s" % robotTest), stdout=devnull, stderr=devnull, close_fds=True)
+                p.communicate()
+            except Exception, e:
+                raise SystemExit('Error on compiling Robot %s: %s' % (robotTest, e))
+        if not os.path.exists(robotTest + 'o'):
+            raise SystemExit('Robot %s does not compile' % robotTest)
 
 print 'OK!'
-robotTest += 'o'
+if robotTest.endswith('.r'):
+    robotTest += 'o'
 
 if action == 'test':
     print 'Test completed!'

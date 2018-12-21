@@ -4,13 +4,14 @@
 """
 "CROBOTS" Crobots Batch Tournament Manager
 
-Version:        Python/1.7
+Version:        Python/1.8
 
                 Translated from 'run2012.sh' UNIX/bash to Python 2.7
 
 Author:         Maurizio Camangi
 
 Version History:
+                Version 1.8 Support for balanced scoring systems
                 Version 1.7 No need of log files anymore
                 Version 1.6 Return error code on SystemExit after Exception
                 Version 1.5 Count Python support
@@ -62,7 +63,7 @@ def init_db():
     dbase = dict()
     for s in configuration.listRobots:
         key = os.path.basename(s)
-        dbase[key] = [key, 0, 0, 0, 0]
+        dbase[key] = [key, 0, 0, 0, 0, 0]
 
 
 # update database
@@ -77,6 +78,7 @@ def update_db(lines):
         values[2] += r[2]
         values[3] += r[3]
         values[4] += r[4]
+        values[5] += r[5]
         dbase[name] = values
 
 
@@ -172,7 +174,7 @@ def run_tournament(ptype, num, matchParam):
             raise SystemExit
         build_crobots_cmdline(param, [robotPath % (configuration.sourcePath, s) for s in r])
     if len(spawnList) > 0: run_crobots()
-    show_report(dbase)
+    show_report(dbase, ptype)
     print '%s %s completed!' % (time.ctime(), ptype.upper())
 
 

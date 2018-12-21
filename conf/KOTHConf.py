@@ -102,4 +102,4 @@ class Configuration(object):
                   'hal9015', 'the_old', 'pippo15a', 'gargantua', 'antman', 'flash9', 'frank15', 'tux', 'gerty4',
                   'tyrion', 'dlrn', 'bttf', 'corbu15', 'misdemeano', 'thor', 'puppet', 'mcfly', 'jedi13', 'ironman_15',
                   'music', 'coppi15ma1', 'colour', 'linabo15', 'one', 'hulk', 'coppi15mc1', 'coppi15md1', 'mies15',
-                  'coppi15ma2']
+                  'coppi15ma2', 'millenium', 'wraith']

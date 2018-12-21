@@ -4,13 +4,14 @@
 """
 "CROBOTS" Crobots Batch Tournament Manager with DataBase support
 
-Version:        Python/1.4
+Version:        Python/1.5
 
                 Derived from Crobots.py 1.3
 
 Author:         Maurizio Camangi
 
 Version History:
+                Version 1.5 Support for balanced scoring systems
                 Version 1.4 Return error code on SystemExit after Exception
                 Version 1.3 Count Python support
                 Patch 1.2.2 Polish code
@@ -106,7 +107,7 @@ def init_db(logfile, logtype):
         dbase = shelve.open(dbfile, 'c')
         for s in configuration.listRobots:
             key = os.path.basename(s)
-            dbase[key] = [0, 0, 0, 0]
+            dbase[key] = [0, 0, 0, 0, 0]
         dbase.sync()
         return 0
     else:
@@ -129,6 +130,7 @@ def update_db(lines):
         values[1] += r[2]
         values[2] += r[3]
         values[3] += r[4]
+        values[4] += r[5]
         dbase[name] = values
     dbase.sync()
 
